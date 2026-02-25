@@ -4,7 +4,6 @@ __pycache__/
 .env
 .DS_Store
 
-# model artifacts (큰 파일이면 보통 올리지 않음)
-models/*.h5
+# model artifacts 
 models/*.keras
-models/*.onnx
+
