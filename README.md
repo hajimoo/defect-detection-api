@@ -1,23 +1,50 @@
-# CNN Manufacturing Defect Detection API
+# CNN 製造欠陥検出 API
 
-FastAPI backend for manufacturing defect detection model deployment.
+製造業における欠陥検出モデルをデプロイするための FastAPI バックエンド。
 
-This project demonstrates:
+> **開発中（Work in Progress）**
 
-- REST API backend design
-- Machine learning model integration
-- Image prediction endpoint
-- Production-style project structure
+本プロジェクトは、訓練済みCNN欠陥検出モデルをREST APIとして公開し、外部システムが検査画像を送信して予測結果を受け取れるようにすることを目的としています。
 
 ---
 
-## Tech Stack
+## 目的
+
+欠陥検出モデルはもともとノートブック環境で開発・評価されました。
+
+このモデルを実際のアプリケーションで利用できるようにするため、本プロジェクトでは **FastAPI** を使用した軽量な推論APIを構築します。
+
+---
+
+## 実装予定の機能
+
+- 欠陥予測のための画像アップロードエンドポイント
+- モデル推論の統合
+- 画像ファイルの入力バリデーション
+- 信頼度スコアを含む予測レスポンス
+- 予測監視のためのロギング
+
+---
+
+## 技術スタック
 
 - FastAPI
 - Python
 - TensorFlow / AutoKeras
-- Pillow / NumPy
+- Pillow
+- NumPy
 
 ---
 
-## Project Structure
+## プロジェクト構成
+
+```
+app
+ ├ main.py
+ ├ routers
+ │   └ predict.py
+ ├ schemas
+ │   └ prediction.py
+ └ services
+     └ model_loader.py
+```
