@@ -31,12 +31,13 @@ FastAPI を用いた軽量な推論 API を構築しています。
 
 ## Project Structure
 
-
+```
 app
 ├ main.py
 ├ routers
-│ └ predict.py
+│   └ predict.py
 ├ schemas
-│ └ prediction.py
+│   └ prediction.py
 └ services
-└ model_loader.py
+    └ model_loader.py
+```
