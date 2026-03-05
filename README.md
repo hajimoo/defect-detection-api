@@ -1,32 +1,27 @@
-# CNN 製造欠陥検出 API
+# CNN Defect Detection API
 
-製造業における欠陥検出モデルをデプロイするための FastAPI バックエンド。
+FastAPI ベースのバックエンドで、製造業における欠陥検出モデルを REST API として提供する推論サービス。
 
-> **開発中（Work in Progress）**
+## Status
+**開発中（Work in Progress）**
 
-本プロジェクトは、訓練済みCNN欠陥検出モデルをREST APIとして公開し、外部システムが検査画像を送信して予測結果を受け取れるようにすることを目的としています。
+## Overview
+本プロジェクトは、訓練済みCNN欠陥検出モデルをREST APIとして公開し、
+外部システムが検査画像を送信して予測結果を取得できるようにすることを目的としています。
 
----
+このモデルはもともとノートブック環境で開発・評価されましたが、
+実際のアプリケーションで利用できるようにするため、
+FastAPI を用いた軽量な推論 API を構築しています。
 
-## 目的
+## Planned Features
 
-欠陥検出モデルはもともとノートブック環境で開発・評価されました。
+- 画像アップロードによる欠陥予測エンドポイント
+- CNNモデル推論の統合
+- 入力画像のバリデーション
+- 信頼度スコア付き予測レスポンス
+- 推論ログの記録
 
-このモデルを実際のアプリケーションで利用できるようにするため、本プロジェクトでは **FastAPI** を使用した軽量な推論APIを構築します。
-
----
-
-## 実装予定の機能
-
-- 欠陥予測のための画像アップロードエンドポイント
-- モデル推論の統合
-- 画像ファイルの入力バリデーション
-- 信頼度スコアを含む予測レスポンス
-- 予測監視のためのロギング
-
----
-
-## 技術スタック
+## Tech Stack
 
 - FastAPI
 - Python
@@ -34,17 +29,14 @@
 - Pillow
 - NumPy
 
----
+## Project Structure
 
-## プロジェクト構成
 
-```
 app
- ├ main.py
- ├ routers
- │   └ predict.py
- ├ schemas
- │   └ prediction.py
- └ services
-     └ model_loader.py
-```
+├ main.py
+├ routers
+│ └ predict.py
+├ schemas
+│ └ prediction.py
+└ services
+└ model_loader.py
