@@ -7,6 +7,7 @@ router = APIRouter()
 
 @router.post("/predict", response_model=PredictionResponse)
 async def predict(file: UploadFile = File(...)):
+    contents = await file.read()
     result = run_inference(file.filename)
 
     conn = get_connection()
