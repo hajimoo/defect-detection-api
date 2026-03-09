@@ -1,5 +1,6 @@
 from pydantic import BaseModel
 
 class PredictionResponse(BaseModel):
-    label: str
+    image_name: str
+    prediction: str
     confidence: float
