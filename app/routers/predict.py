@@ -5,7 +5,7 @@ from app.db.database import get_connection
 router = APIRouter()
 
 
-@router.post("/predict")
+@router.post("/predict", response_model=PredictionResponse)
 async def predict(file: UploadFile = File(...)):
     result = run_inference(file.filename)
 
