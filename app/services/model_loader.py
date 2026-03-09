@@ -1,1 +1,5 @@
-# 모델 업로드 서비스 파일 구조 생성
+# 예시
+def load_model():
+    # TensorFlow / AutoKeras 모델 로드
+    return None
+
