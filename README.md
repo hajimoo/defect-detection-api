@@ -35,6 +35,7 @@ FastAPI を用いた軽量な推論 API を構築しています。
 app
 ├ main.py
 ├ routers
+│   └ health.py
 │   └ predict.py
 ├ schemas
 │   └ prediction.py
