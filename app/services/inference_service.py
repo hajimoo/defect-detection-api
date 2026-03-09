@@ -1,11 +1,10 @@
-import os
-import mysql.connector
+def run_inference(file_name: str):
+    # 실제로는 모델 추론 결과를 반환
+    prediction = "defect"
+    confidence = 0.91
 
-def get_connection():
-    conn = mysql.connector.connect(
-        host=os.getenv("DB_HOST"),
-        user=os.getenv("DB_USER"),
-        password=os.getenv("DB_PASSWORD"),
-        database=os.getenv("DB_NAME")
-    )
-    return conn
+    return {
+        "image_name": file_name,
+        "prediction": prediction,
+        "confidence": confidence
+    }
