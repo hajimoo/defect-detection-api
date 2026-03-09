@@ -1,4 +1,4 @@
-from fastapi import APIRouter, UploadFile, File
+from fastapi import APIRouter, UploadFile, File,HTTPException
 from app.services.inference_service import run_inference
 from app.db.database import get_connection
 
