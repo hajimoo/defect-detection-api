@@ -2,46 +2,74 @@
 
 FastAPI ベースのバックエンドで、製造業における欠陥検出モデルを REST API として提供する推論サービスのプロトタイプです。
 
-このプロジェクトでは、ノートブック環境で開発・評価された CNN 欠陥検出モデルを、実際のアプリケーションで利用可能な API として統合することを目的としています。
+このプロジェクトは、ノートブック環境で開発した CNN 欠陥検出モデルを、実際のアプリケーションで利用可能な API として統合することを目的として作成しました。
 
-現在は FastAPI バックエンド構造と MySQL による予測ログ保存機能を実装しており、今後 CNN モデル推論パイプラインを統合する予定です。
+単なるモデル実験ではなく、
 
----
+* モデル推論
+* API
+* 推論ログ管理
 
-# Status
-
-Work in Progress
-
-現在の実装は **API バックエンドの基本構造とログ記録機能**を中心としたプロトタイプです。
-CNN モデル推論部分は今後統合予定です。
+を組み合わせた **実運用を意識した ML バックエンド構造**の構築を目指しています。
 
 ---
 
-## Motivation
+# Problem
 
-最初の実験では、モデルは非常に高い Accuracy を示しました。
+最初に CNN モデルを構築した際、モデルは非常に高い **Accuracy** を示しました。
 
-しかし、Confusion Matrix を確認すると、
-いくつかの欠陥サンプルが「正常」と予測されていることに気づきました。
+しかし、詳細な評価を確認すると、いくつかの **欠陥サンプルが正常として予測されている**ことに気づきました。
 
-製造業の検査システムでは、
-欠陥品の見逃し（False Negative）は重大なリスクになります。
+製造業の検査システムでは、欠陥品を見逃すこと（False Negative）は重大な財務的・安全上のリスクになります。
 
-この経験から、
+つまり、
 
-「Accuracy が高いモデルは本当に信頼できるのか？」
+> Accuracy が高いモデルでも、実際の検査システムとしては信頼できない可能性がある
 
-という疑問を持つようになりました。
+という問題がありました。
 
-そこで本プロジェクトでは、
-単に Accuracy を最大化するのではなく、
-Recall を重視した評価戦略を採用しました。
+---
+
+# Investigation
+
+Confusion Matrix と予測結果を確認したところ、データセットには深刻な **クラス不均衡**が存在していました。
+
+| Split | Normal | Defect |
+| ----- | ------ | ------ |
+| Train | 1102   | 59     |
+| Test  | 276    | 15     |
+
+このようなデータでは、モデルは単純に **「正常」と予測するだけでも高い Accuracy を達成できてしまいます。**
+
+このため、Accuracy だけではモデルの信頼性を評価できないと判断しました。
+
+---
+
+# Approach
+
+そこで本プロジェクトでは、評価戦略を以下のように変更しました。
+
+* Accuracy だけではなく
+* **Recall（再現率）を重視した評価**
+
+を行うようにしました。
+
+評価指標:
+
+* Accuracy
+* Precision
+* **Recall**
+* F1 Score
+* Confusion Matrix
+* ROC Curve
+
+このアプローチは、実際の製造検査システムのリスク構造により近い評価方法になります。
 
 ---
 
 # Model Development
 
-CNN モデルの開発および評価はノートブック環境で実施しました。
+モデル開発はノートブック環境で実施しました。
 
 関連ノートブック:
 
@@ -49,44 +77,23 @@ CNN モデルの開発および評価はノートブック環境で実施しま�
 notebook/notebook.ipynb
 ```
 
-## Dataset
+使用技術:
 
-クラス不均衡のある製造検査データセットを使用。
+* TensorFlow
+* AutoKeras ImageClassifier
 
-| Split | 正常   | 欠陥 |
-| ----- | ---- | -- |
-| Train | 1102 | 59 |
-| Test  | 276  | 15 |
-
-欠陥サンプルが非常に少ないため、Accuracy だけではモデルの信頼性を適切に評価できません。
-
----
-
-## Preprocessing
-
-画像は以下の前処理を行いました。
+前処理:
 
 * RGB 変換
-* 256 × 256 にリサイズ
-* ピクセル値を `[0,1]` に正規化
+* 256×256 リサイズ
+* ピクセル値の正規化 `[0,1]`
 
----
-
-## Label Encoding
+ラベル:
 
 | Label | Meaning |
 | ----- | ------- |
 | 0     | Normal  |
 | 1     | Defect  |
-
----
-
-## Training Setup
-
-使用したツール:
-
-* TensorFlow
-* AutoKeras ImageClassifier
 
 学習設定:
 
@@ -98,50 +105,68 @@ notebook/notebook.ipynb
 
 ---
 
-## Evaluation Metrics
+# From Experiment to Application
 
-本プロジェクトでは **Recall（再現率）を重視した評価**を行いました。
+ノートブックでモデルの評価を行った後、次の課題が見えてきました。
 
-使用指標:
+モデル実験だけでは、
 
-* Accuracy
-* Precision
-* Recall
-* F1 Score
-* Confusion Matrix
-* ROC Curve
+* 外部システムとの統合
+* 推論ログの管理
+* 将来的なモニタリング
 
----
+といった **実運用の課題を扱えない**という点です。
 
-## Reliability Considerations
-
-初期実験では高い精度が確認されましたが、以下の理由から結果が過度に楽観的である可能性があります。
-
-* データセットサイズが小さい
-* クラス不均衡が非常に大きい
-* train / test サンプルの類似性
-
-そのため、実運用前には以下の追加検証が必要です。
-
-* Cross Validation
-* 外部データセット評価
-* データ拡張
+そこで、このモデルを **FastAPI ベースの推論 API**として公開するバックエンドを構築しました。
 
 ---
 
-# API Overview
+# API Design
 
-本プロジェクトでは、学習済みモデルを REST API として公開する FastAPI バックエンドを構築しています。
+現在の API は以下のエンドポイントを提供します。
 
-現在の API は以下の機能を提供します。
+| Endpoint      | Description      |
+| ------------- | ---------------- |
+| GET /health   | API health check |
+| POST /predict | 画像アップロードによる欠陥予測  |
 
-| Endpoint      | Description        |
-| ------------- | ------------------ |
-| GET /health   | API health check   |
-| POST /predict | 画像をアップロードして予測結果を取得 |
+推論結果は JSON として返されます。
 
-現在 `/predict` エンドポイントは **推論パイプライン統合前のプロトタイプ実装**であり、
-プレースホルダー推論結果を返します。
+例:
+
+```json
+{
+  "image_name": "sample.jpg",
+  "prediction": "defect",
+  "confidence": 0.91
+}
+```
+
+---
+
+# Prediction Logging
+
+実際の ML システムでは、推論結果のログが非常に重要になります。
+
+このプロジェクトでは **MySQL を使用して推論ログを保存**しています。
+
+テーブル構造:
+
+| column     | description      |
+| ---------- | ---------------- |
+| id         | primary key      |
+| image_name | uploaded image   |
+| prediction | predicted label  |
+| confidence | model confidence |
+| created_at | timestamp        |
+
+ログを保存することで、
+
+* モデルの誤検知分析
+* モデル改善
+* 将来のモニタリング
+
+が可能になります。
 
 ---
 
@@ -161,123 +186,32 @@ Prediction Result
 MySQL Logging
 ```
 
-将来的には以下の構成を想定しています。
+---
 
-```
-Inspection System
-        ↓
-FastAPI API
-        ↓
-CNN Model Inference
-        ↓
-Prediction Result
-        ↓
-MySQL Prediction Logs
-        ↓
-Monitoring / Analytics
-```
+# Current Status
+
+現在の `/predict` エンドポイントは **プロトタイプ実装**であり、
+推論部分はプレースホルダーとなっています。
+
+今後、
+
+* 学習済みモデルのロード
+* 実際の画像前処理
+* CNN 推論パイプライン
+
+を統合予定です。
 
 ---
 
-# Project Structure
+# Limitations
 
-```
-app
-├── routers
-│   ├── health.py
-│   └── predict.py
-│
-├── services
-│   ├── model_loader.py
-│   └── inference_service.py
-│
-├── db
-│   ├── database.py
-│   └── init.sql
-│
-├── config.py
-├── schemas.py
-└── main.py
+現在の実験結果には以下の制限があります。
 
-notebook
-└── notebook.ipynb
-```
+* データセットが小さい
+* クラス不均衡が大きい
+* train/test データの類似性
 
----
-
-# Database
-
-MySQL を使用して推論ログを保存します。
-
-## Table
-
-```
-predictions
-```
-
-| column     | description      |
-| ---------- | ---------------- |
-| id         | primary key      |
-| image_name | uploaded image   |
-| prediction | predicted label  |
-| confidence | model confidence |
-| created_at | timestamp        |
-
----
-
-# Setup
-
-## Install dependencies
-
-```
-pip install -r requirements.txt
-```
-
-## Configure environment variables
-
-`.env` ファイルを作成します。
-
-```
-DB_HOST=localhost
-DB_PORT=3306
-DB_USER=root
-DB_PASSWORD=your_password
-DB_NAME=defect_detection
-```
-
----
-
-## Initialize database
-
-```
-mysql -u root -p < app/db/init.sql
-```
-
----
-
-## Run API
-
-```
-uvicorn app.main:app --reload
-```
-
-API documentation:
-
-```
-http://127.0.0.1:8000/docs
-```
-
----
-
-# Example Response
-
-```
-{
-  "image_name": "sample.jpg",
-  "prediction": "defect",
-  "confidence": 0.91
-}
-```
+そのため、実運用前には追加の検証が必要です。
 
 ---
 
@@ -286,22 +220,21 @@ http://127.0.0.1:8000/docs
 今後の改善予定:
 
 * CNN モデル推論の統合
-* 入力画像バリデーション
+* データ拡張
+* Cross Validation
 * モデルバージョン管理
-* 推論ログ分析
-* モニタリングダッシュボード
 * Docker コンテナ化
-* CI/CD パイプライン
+* 推論モニタリング
 
 ---
 
 # Engineering Takeaways
 
-このプロジェクトを通じて得られた重要な知見:
+このプロジェクトから得られた重要な知見:
 
-* Accuracy はクラス不均衡データでは信頼できない
-* ML システムにはモデル以外のインフラが重要
-* 推論ログはモデル改善に不可欠
+* 高い Accuracy は必ずしも信頼性を意味しない
+* クラス不均衡データでは評価指標が重要
+* ML システムには **モデル + インフラ**の両方が必要
 
 ---
 
