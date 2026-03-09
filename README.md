@@ -37,8 +37,7 @@ app
 ├ routers
 │   └ health.py
 │   └ predict.py
-├ schemas
-│   └ prediction.py
-└ services
-    └ model_loader.py
+├ schemas.py
+└ services(미완)
+    └ model_loader.py(미완)
 ```
