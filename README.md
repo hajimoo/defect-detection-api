@@ -33,11 +33,12 @@ FastAPI を用いた軽量な推論 API を構築しています。
 
 ```
 app
-├ main.py
 ├ routers
 │   └ health.py
 │   └ predict.py
+└ services
+    └ model_loader.py
+├ main.py
 ├ schemas.py
-└ services(미완)
-    └ model_loader.py(미완)
+
 ```
