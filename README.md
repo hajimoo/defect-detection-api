@@ -188,11 +188,10 @@ defect-detection-api
 git clone https://github.com/hajimoo/defect-detection-api.git
 cd defect-detection-api
 
-
 ### 2. Create virtual environment (仮想環境を作成)
 ```bash
 python -m venv .venv
-```
+
 
 ### 3. Activate environment (環境を有効化)
 Windows:
