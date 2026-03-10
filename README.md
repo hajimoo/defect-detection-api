@@ -137,7 +137,7 @@ FastAPI を使用して、モデル推論を **REST API として公開**して�
 | GET /health | API health check |
 | POST /predict | 画像アップロードによる欠陥予測 |
 
-レスポンス例
+### レスポンス例
 
 ```json
 {
@@ -145,7 +145,7 @@ FastAPI を使用して、モデル推論を **REST API として公開**して�
   "prediction": "defect",
   "confidence": 0.91
 }
-推論の流れ
+### 推論の流れ
 Inspection Image
         ↓
 POST /predict
@@ -163,12 +163,13 @@ Prediction Logging
 
 このプロジェクトでは MySQL を使用して推論結果を保存しています。
 
-column	description
-id	primary key
-image_name	uploaded image name
-prediction	predicted label
-confidence	model confidence
-created_at	timestamp
+| column | description |
+|------|-------------|
+| id | primary key |
+| image_name | uploaded image name |
+| prediction | predicted label |
+| confidence | model confidence |
+| created_at | timestamp |
 
 ログを保存することで
 
@@ -179,7 +180,7 @@ created_at	timestamp
 将来的なモニタリング
 
 が可能になります。
-Project Structure
+###Project Structure
 defect-detection-api
 │
 ├── app
