@@ -5,7 +5,6 @@ from app.schemas import PredictionResponse
 
 router = APIRouter()
 
-
 @router.post("/predict", response_model=PredictionResponse)
 async def predict(file: UploadFile = File(...)):
     file_bytes = await file.read()
