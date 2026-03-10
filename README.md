@@ -145,7 +145,7 @@ FastAPI を使用して、モデル推論を **REST API として公開**して�
   "confidence": 0.91
 }
 
-#  推論の流れ
+推論の流れ
 Inspection Image
         ↓
 POST /predict
@@ -182,7 +182,7 @@ MySQL logging
 
 が可能になります。
 
-# Project Structure
+Project Structure
 
 defect-detection-api
 │
@@ -211,7 +211,7 @@ defect-detection-api
 ├── README.md
 └── requirements.txt
 
-# Current Limitations
+Current Limitations
 
 現在の実験結果には以下の制限があります。
 
@@ -229,7 +229,7 @@ Cross Validation
 
 threshold calibration
 
-# 現在の実験結果には以下の制限があります。
+現在の実験結果には以下の制限があります。
 
 データセットが小さい
 
