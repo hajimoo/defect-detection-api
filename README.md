@@ -166,9 +166,6 @@ defect-detection-api
 
 
 
-```markdown
-# Defect Detection API
-
 ## Tech Stack (技術スタック)
 
 **Backend**
@@ -190,7 +187,7 @@ defect-detection-api
 ```bash
 git clone https://github.com/hajimoo/defect-detection-api.git
 cd defect-detection-api
-```
+
 
 ### 2. Create virtual environment (仮想環境を作成)
 ```bash
