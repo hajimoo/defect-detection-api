@@ -81,9 +81,8 @@
 # Model Development
 
 モデル開発と評価は **ノートブック環境**で行いました。
-notebook/notebook.ipynb
 
-使用技術
+notebook/notebook.ipynb使用技術
 
 - TensorFlow
 - AutoKeras ImageClassifier
