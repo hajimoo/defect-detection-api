@@ -224,16 +224,15 @@ uvicorn app.main:app --reload
 ```
 http://127.0.0.1:8000/docs
 ```
-
-
 ## Architecture Diagram (アーキテクチャ図)
 
-[React Frontend](#)  
+React Frontend  
   ↓  
 [FastAPI Backend (API Repo)](https://github.com/hajimoo/defect-detection-api/tree/main)  
   ↓  
 [CNN Model (GitHub Repo)](https://github.com/hajimoo/cnn-manufacturing-defect)  
   ↓  
-MySQL
+MySQL 
+
 
 
