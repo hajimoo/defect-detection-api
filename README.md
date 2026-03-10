@@ -136,6 +136,13 @@ FastAPI を使用して、モデル推論を **REST API として公開**して�
 | GET /health | API health check |
 | POST /predict | 画像アップロードによる欠陥予測 |
 
+
+Cross Validation
+
+外部データセット評価
+
+threshold calibration
+
 ### レスポンス例
 
 ```json
@@ -144,7 +151,6 @@ FastAPI を使用して、モデル推論を **REST API として公開**して�
   "prediction": "defect",
   "confidence": 0.91
 }
-
 推論の流れ
 Inspection Image
         ↓
@@ -157,20 +163,18 @@ CNN inference
 Prediction result
         ↓
 MySQL logging
-
-#Prediction Logging
+Prediction Logging
 
 実際の ML システムでは 推論ログの管理 が非常に重要になります。
 
 このプロジェクトでは MySQL を使用して推論結果を保存しています。
 
-| column     | description         |
-| ---------- | ------------------- |
-| id         | primary key         |
-| image_name | uploaded image name |
-| prediction | predicted label     |
-| confidence | model confidence    |
-| created_at | timestamp           |
+column	description
+id	primary key
+image_name	uploaded image name
+prediction	predicted label
+confidence	model confidence
+created_at	timestamp
 
 ログを保存することで
 
@@ -183,7 +187,6 @@ MySQL logging
 が可能になります。
 
 Project Structure
-
 defect-detection-api
 │
 ├── app
@@ -210,7 +213,6 @@ defect-detection-api
 │
 ├── README.md
 └── requirements.txt
-
 Current Limitations
 
 現在の実験結果には以下の制限があります。
@@ -229,18 +231,40 @@ Cross Validation
 
 threshold calibration
 
-現在の実験結果には以下の制限があります。
+Future Work
 
-データセットが小さい
+モデル
 
-クラス不均衡が大きい
+Data Augmentation
 
-train/test サンプルの類似性
-
-そのため、実運用前には以下の検証が必要です。
+Class weighting
 
 Cross Validation
 
-外部データセット評価
+Larger dataset
 
-threshold calibration
+システム
+
+Docker コンテナ化
+
+Model version 管理
+
+推論モニタリング
+
+API validation 強化
+
+Tech Stack
+
+Python
+
+FastAPI
+
+TensorFlow
+
+AutoKeras
+
+MySQL
+
+NumPy
+
+Pillow
