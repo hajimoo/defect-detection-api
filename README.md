@@ -1,14 +1,12 @@
-좋습니다! 깔끔한 GitHub README 템플릿을 만들어드릴게요. 지금까지 정리해주신 프로젝트 설명을 기반으로, 구조화된 마크다운 코드로 작성했습니다. 그대로 `README.md`에 붙여넣으면 보기 좋게 나올 겁니다.
 
-```markdown
-# 🛠️ CNN Defect Detection API
+#  CNN Defect Detection API
 
 製造業の欠陥検出モデルを REST API として提供する推論バックエンドのプロトタイプです。  
 ノートブックでの実験を超えて、**実際のアプリケーションで利用可能な ML 推論サービス**として構築することを目的としています。
 
 ---
 
-## 🚩 Problem
+##  Problem
 
 初期の CNN モデルは高い Accuracy を示しましたが、**Confusion Matrix**では欠陥サンプルを正常と誤判定するケースが確認されました。  
 製造業の検査システムでは **欠陥を見逃す (False Negative)** ことが重大なリスクとなります。
@@ -18,7 +16,7 @@
 
 ---
 
-## 🔍 Investigation
+##  Investigation
 
 データセットに深刻な **クラス不均衡** が存在していました。
 
@@ -31,7 +29,7 @@
 
 ---
 
-## 🎯 Approach
+##  Approach
 
 評価戦略を **Accuracy 中心 → Recall 重視** に変更しました。
 
@@ -45,7 +43,7 @@
 
 ---
 
-## 🧪 Model Development
+##  Model Development
 
 ノートブック環境でモデル開発・評価を実施。  
 技術スタック: **TensorFlow**, **AutoKeras ImageClassifier**
@@ -70,18 +68,18 @@
 
 ---
 
-## ⚙️ From Experiment to System
+##  From Experiment to System
 
 ノートブックでは扱えない課題:
 - 外部システムとの統合
 - 推論ログ管理
 - モニタリング
 
-➡️ **FastAPI** を用いて REST API 化しました。
+ **FastAPI** を用いて REST API 化しました。
 
 ---
 
-## 📡 API Design
+##  API Design
 
 ### Endpoints
 - `GET /health` : API health check
@@ -113,7 +111,7 @@ MySQL logging
 
 ---
 
-## 🗄️ Prediction Logging
+##  Prediction Logging
 
 **MySQL** に推論結果を保存。
 
@@ -134,7 +132,7 @@ MySQL logging
 
 ---
 
-## 📂 Project Structure
+##  Project Structure
 
 ```
 defect-detection-api
@@ -163,7 +161,7 @@ defect-detection-api
 
 ---
 
-## ⚠️ Current Limitations
+##  Current Limitations
 
 - データセットが小さい
 - クラス不均衡が大きい
@@ -176,7 +174,7 @@ defect-detection-api
 
 ---
 
-## 🚀 Future Work
+##  Future Work
 
 ### モデル改善
 - Data Augmentation
@@ -192,7 +190,7 @@ defect-detection-api
 
 ---
 
-## 🛠️ Tech Stack
+##  Tech Stack
 
 - Python
 - FastAPI
@@ -205,8 +203,7 @@ defect-detection-api
 
 ---
 
-이제 이걸 `README.md`에 붙여넣으면 깔끔하게 정리된 프로젝트 소개가 됩니다.  
-혹시 GitHub 배지(예: Python version, License, Build status)도 추가하고 싶으세요?
+
 
 
 
