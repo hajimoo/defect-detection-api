@@ -145,7 +145,7 @@ FastAPI を使用して、モデル推論を **REST API として公開**して�
   "confidence": 0.91
 }
 
-###推論の流れ
+#  推論の流れ
 Inspection Image
         ↓
 POST /predict
@@ -158,19 +158,19 @@ Prediction result
         ↓
 MySQL logging
 
-###Prediction Logging
+#Prediction Logging
 
-実際の ML システムでは 推論ログの管理が非常に重要になります。
+実際の ML システムでは 推論ログの管理 が非常に重要になります。
 
 このプロジェクトでは MySQL を使用して推論結果を保存しています。
 
-| column | description |
-|------|-------------|
-| id | primary key |
+| column     | description         |
+| ---------- | ------------------- |
+| id         | primary key         |
 | image_name | uploaded image name |
-| prediction | predicted label |
-| confidence | model confidence |
-| created_at | timestamp |
+| prediction | predicted label     |
+| confidence | model confidence    |
+| created_at | timestamp           |
 
 ログを保存することで
 
@@ -182,7 +182,8 @@ MySQL logging
 
 が可能になります。
 
-###Project Structure
+# Project Structure
+
 defect-detection-api
 │
 ├── app
@@ -210,7 +211,7 @@ defect-detection-api
 ├── README.md
 └── requirements.txt
 
-###Current Limitations
+# Current Limitations
 
 現在の実験結果には以下の制限があります。
 
@@ -228,44 +229,18 @@ Cross Validation
 
 threshold calibration
 
-###Future Work
+# 現在の実験結果には以下の制限があります。
 
-*モデル*
+データセットが小さい
 
-Data Augmentation
+クラス不均衡が大きい
 
-Class weighting
+train/test サンプルの類似性
+
+そのため、実運用前には以下の検証が必要です。
 
 Cross Validation
 
-Larger dataset
+外部データセット評価
 
-*システム*
-
-Docker コンテナ化
-
-Model version 管理
-
-推論モニタリング
-
-API validation 強化
-
-###Tech Stack
-
-Python
-
-FastAPI
-
-TensorFlow
-
-AutoKeras
-
-MySQL
-
-NumPy
-
-Pillow
-
-
----
-
+threshold calibration
