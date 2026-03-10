@@ -1,140 +1,119 @@
+# CNN Defect Detection API
 
-#  CNN Defect Detection API
+製造業における欠陥検出モデルを **REST API として提供する推論バックエンドのプロトタイプ**です。
 
-製造業の欠陥検出モデルを REST API として提供する推論バックエンドのプロトタイプです。  
-ノートブックでの実験を超えて、**実際のアプリケーションで利用可能な ML 推論サービス**として構築することを目的としています。
+本プロジェクトは、ノートブック環境で開発した CNN モデルを実際のアプリケーションで利用可能な **ML 推論サービス**として構築することを目的としています。
 
 ---
 
 ##  Problem
+初期の CNN モデルはテストデータに対して **高い Accuracy** を示しました。  
+しかし **Confusion Matrix** を確認したところ、欠陥サンプルを正常と誤判定するケースが存在していました。
 
-初期の CNN モデルは高い Accuracy を示しましたが、**Confusion Matrix**では欠陥サンプルを正常と誤判定するケースが確認されました。  
-製造業の検査システムでは **欠陥を見逃す (False Negative)** ことが重大なリスクとなります。
+製造業の検査システムでは **「欠陥を見逃す (False Negative)」** ことが重大なリスクになります。
+このため、以下の問題が明らかになりました。
 
-- Accuracy が高くても信頼できない可能性
-- クラス不均衡による評価の歪み
+* Accuracy が高くても信頼できない可能性
+* クラス不均衡による評価の歪み
 
 ---
 
 ##  Investigation
-
-データセットに深刻な **クラス不均衡** が存在していました。
+データセットを分析した結果、以下のような **深刻なクラス不均衡** が存在していました。
 
 | Split | Normal | Defect |
-|-------|--------|--------|
-| Train | 1102   | 59     |
-| Test  | 276    | 15     |
+| :--- | :--- | :--- |
+| **Train** | 1102 | 59 |
+| **Test** | 276 | 15 |
 
-このため、Accuracy だけでは信頼性を評価できないと判断しました。
-
----
-
-##  Approach
-
-評価戦略を **Accuracy 中心 → Recall 重視** に変更しました。
-
-使用した評価指標:
-- Accuracy
-- Precision
-- **Recall (Primary metric)**
-- F1 Score
-- Confusion Matrix
-- ROC Curve
+このようなデータでは、モデルが常に **Normal と予測するだけでも高い Accuracy** を達成できてしまいます。そのため **Accuracy だけではモデルの信頼性を評価できない** と判断しました。
 
 ---
 
-##  Model Development
+## Approach
+評価戦略を **「Accuracy 中心 → Recall 重視」** へ変更しました。  
+理由は、製造業の検査システムでは **欠陥の見逃しを最小化することが最も重要** だからです。
 
-ノートブック環境でモデル開発・評価を実施。  
-技術スタック: **TensorFlow**, **AutoKeras ImageClassifier**
+**使用した評価指標:**
+* Accuracy / Precision / **Recall (Primary Metric)** / F1 Score
+* Confusion Matrix
+* ROC Curve
 
-### 前処理
-- RGB 変換
-- 256×256 リサイズ
-- ピクセル値正規化 [0,1]
+---
 
-### ラベル
+## Model Development
+モデル開発および評価は **Jupyter Notebook 環境** で実施しました。
+
+**使用技術:**
+* TensorFlow / AutoKeras ImageClassifier
+
+### Preprocessing
+* RGB 変換 / 256×256 リサイズ / ピクセル値の正規化 `[0, 1]`
+
+### Label
 | Label | Meaning |
-|-------|---------|
-| 0     | Normal  |
-| 1     | Defect  |
+| :--- | :--- |
+| 0 | Normal |
+| 1 | Defect |
 
-### 学習設定
+### Training Configuration
 | Parameter | Value |
-|-----------|-------|
-| Loss      | Binary Cross Entropy |
+| :--- | :--- |
+| Loss | Binary Cross Entropy |
 | Validation Split | 0.2 |
-| Epochs    | 3 |
+| Epochs | 3 |
 
 ---
 
-##  From Experiment to System
+## From Experiment to System
+ノートブック環境での課題（外部システム統合、ログ管理、モニタリング）を解決するため、本プロジェクトでは CNN モデルを **FastAPI を用いた推論 API** として実装しました。
 
-ノートブックでは扱えない課題:
-- 外部システムとの統合
-- 推論ログ管理
-- モニタリング
+### API Design (Endpoints)
+| Endpoint | Method | Description |
+| :--- | :--- | :--- |
+| `/health` | `GET` | API health check |
+| `/predict` | `POST` | 画像アップロードによる欠陥予測 |
 
- **FastAPI** を用いて REST API 化しました。
-
----
-
-##  API Design
-
-### Endpoints
-- `GET /health` : API health check
-- `POST /predict` : 画像アップロードによる欠陥予測
-
-### Response Example
+**Response Example:**
 ```json
 {
   "image_name": "sample.jpg",
   "prediction": "defect",
   "confidence": 0.91
 }
+
 ```
 
-### 推論フロー
-```
-Inspection Image
-        ↓
-POST /predict
-        ↓
-Image preprocessing
-        ↓
-CNN inference
-        ↓
-Prediction result
-        ↓
-MySQL logging
-```
+### Inference Pipeline
+
+1. **Inspection Image** (Input)
+2. **POST /predict** (API Call)
+3. **Image Preprocessing**
+4. **CNN Inference**
+5. **Prediction Result** (Output)
+6. **MySQL Logging** (Data Storage)
 
 ---
 
 ##  Prediction Logging
 
-**MySQL** に推論結果を保存。
+推論結果は MySQL データベースに保存され、以下の分析が可能になります。
 
-| column      | description            |
-|-------------|------------------------|
-| id          | primary key            |
-| image_name  | uploaded image name    |
-| prediction  | predicted label        |
-| confidence  | model confidence       |
-| created_at  | timestamp              |
+| Column | Description |
+| --- | --- |
+| `id` | Primary key |
+| `image_name` | Uploaded image name |
+| `prediction` | Predicted label |
+| `confidence` | Model confidence |
+| `created_at` | Timestamp |
 
-ログ保存により:
-- 誤検知分析
-- モデル改善
-- モニタリング
-
-が可能。
+* **活用例:** 誤検知分析、モデル改善、将来的なモニタリング。
 
 ---
 
 ##  Project Structure
 
-```
+```text
 defect-detection-api
 │
 ├── app
@@ -157,49 +136,43 @@ defect-detection-api
 ├── models
 ├── README.md
 └── requirements.txt
+
 ```
+
+---
+
+##  Dataset
+
+本プロジェクトで使用したデータセットは以下のリンクから取得できます。
+
+> [Dataset Download (Google Drive)](https://drive.google.com/drive/folders/1_mUbemlmzwXYeZPI5Bj3cG7FG53OFrxj)
+
+*注意: 本モデルはこのデータセットを前提として学習されています。異なるドメインの画像では予測精度が低下する可能性があります。*
 
 ---
 
 ##  Current Limitations
 
-- データセットが小さい
-- クラス不均衡が大きい
-- train/test サンプルの類似性
-
-必要な検証:
-- Cross Validation
-- 外部データセット評価
-- Threshold calibration
+* データセットサイズが小さい / クラス不均衡が大きい。
+* Train/Test サンプルの類似性により、性能が楽観的に見えている可能性。
+* **必要な検証:** Cross Validation、外部データセット評価、Threshold calibration。
 
 ---
 
-##  Future Work
+## Future Work
 
-### モデル改善
-- Data Augmentation
-- Class weighting
-- Cross Validation
-- Larger dataset
-
-### システム改善
-- Docker コンテナ化
-- Model version 管理
-- 推論モニタリング
-- API validation 強化
+* **Model:** Data Augmentation, Class Weighting, Larger Dataset.
+* **System:** Docker コンテナ化, Model Version 管理, API Validation 強化.
 
 ---
 
 ##  Tech Stack
 
-- Python
-- FastAPI
-- TensorFlow
-- AutoKeras
-- MySQL
-- NumPy
-- Pillow
+* **Backend:** Python, FastAPI, MySQL
+* **ML/DL:** TensorFlow, AutoKeras, NumPy, Pillow
 
+
+```
 
 
 
