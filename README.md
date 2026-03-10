@@ -166,60 +166,85 @@ defect-detection-api
 
 ---
 
-##  Tech Stack
+좋습니다! 요청하신 내용을 깔끔한 **Markdown 형식**으로 정리해드리겠습니다. 일본어와 영어를 섞어, 일본 엔지니어들이 읽기 편하면서도 국제적으로 통용되는 README 스타일로 구성했습니다.  
 
-* **Backend:** Python, FastAPI, MySQL
-* **ML/DL:** TensorFlow, AutoKeras, NumPy, Pillow
+---
 
-Defect Detection API
-Setup (セットアップ)
-Clone the repository (リポジトリをクローン)
+```markdown
+# Defect Detection API
 
-bash
+## Tech Stack (技術スタック)
+
+**Backend**
+- Python
+- FastAPI
+- MySQL
+
+**ML / DL**
+- TensorFlow
+- AutoKeras
+- NumPy
+- Pillow
+
+---
+
+## Setup (セットアップ)
+
+### 1. Clone the repository
+```bash
 git clone https://github.com/hajimoo/defect-detection-api.git
 cd defect-detection-api
-Create virtual environment (仮想環境を作成)
+```
 
-bash
+### 2. Create virtual environment (仮想環境を作成)
+```bash
 python -m venv .venv
-Activate environment (環境を有効化)
+```
 
+### 3. Activate environment (環境を有効化)
 Windows:
-
-bash
+```bash
 .venv\Scripts\Activate.ps1
-Install dependencies (依存関係をインストール)
+```
 
-bash
+### 4. Install dependencies (依存関係をインストール)
+```bash
 pip install -r requirements.txt
-Start MySQL container (MySQLコンテナを起動)
+```
 
-bash
+### 5. Start MySQL container (MySQLコンテナを起動)
+```bash
 docker start mysql-container
-Initialize database (データベース初期化)
+```
 
-bash
+### 6. Initialize database (データベース初期化)
+```bash
 docker exec -i mysql-container mysql -u root -p < app/db/init.sql
-Run the API server (APIサーバーを起動)
+```
 
-bash
+### 7. Run API server (APIサーバーを起動)
+```bash
 uvicorn app.main:app --reload
-Open API documentation (APIドキュメントを開く)
+```
 
-Code
+### 8. Open API documentation (APIドキュメントを開く)
+```
 http://127.0.0.1:8000/docs
+```
 
+👉 これで **誰でもクローンしてすぐ実行可能** です。
 
-Architecture Diagram (アーキテクチャ図)
-バージョン 1 — シンプルテキスト
-markdown
+---
+
+## Architecture Diagram (アーキテクチャ図)
+
+```markdown
 React  
-↓  
+  ↓  
 FastAPI  
-↓  
-CNN model  
-↓  
+  ↓  
+CNN Model  
+  ↓  
 MySQL
-
-
+```
 
