@@ -172,7 +172,6 @@ defect-detection-api
 * **ML/DL:** TensorFlow, AutoKeras, NumPy, Pillow
 
 
-```
 
 
 
