@@ -201,8 +201,6 @@ defect-detection-api
 - Pillow
 ```
 
----
-
 
 
 
