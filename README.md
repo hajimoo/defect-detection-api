@@ -144,7 +144,8 @@ FastAPI を使用して、モデル推論を **REST API として公開**して�
   "prediction": "defect",
   "confidence": 0.91
 }
-### 推論の流れ
+
+###推論の流れ
 Inspection Image
         ↓
 POST /predict
@@ -156,7 +157,8 @@ CNN inference
 Prediction result
         ↓
 MySQL logging
-Prediction Logging
+
+###Prediction Logging
 
 実際の ML システムでは 推論ログの管理が非常に重要になります。
 
@@ -179,6 +181,7 @@ Prediction Logging
 将来的なモニタリング
 
 が可能になります。
+
 ###Project Structure
 defect-detection-api
 │
@@ -207,7 +210,7 @@ defect-detection-api
 ├── README.md
 └── requirements.txt
 
-Current Limitations
+###Current Limitations
 
 現在の実験結果には以下の制限があります。
 
@@ -225,9 +228,9 @@ Cross Validation
 
 threshold calibration
 
-Future Work
+###Future Work
 
-モデル
+*モデル*
 
 Data Augmentation
 
@@ -237,7 +240,7 @@ Cross Validation
 
 Larger dataset
 
-システム
+*システム*
 
 Docker コンテナ化
 
@@ -247,7 +250,7 @@ Model version 管理
 
 API validation 強化
 
-Tech Stack
+###Tech Stack
 
 Python
 
