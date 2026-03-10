@@ -226,11 +226,9 @@ http://127.0.0.1:8000/docs
 ```
 
 
----
-
 ## Architecture Diagram (アーキテクチャ図)
 
-[React Frontend]
+[React Frontend](#)  
   ↓  
 [FastAPI Backend (API Repo)](https://github.com/hajimoo/defect-detection-api/tree/main)  
   ↓  
@@ -238,5 +236,4 @@ http://127.0.0.1:8000/docs
   ↓  
 MySQL
 
-```
 
