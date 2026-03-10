@@ -164,11 +164,7 @@ defect-detection-api
 * **Model:** Data Augmentation, Class Weighting, Larger Dataset.
 * **System:** Docker コンテナ化, Model Version 管理, API Validation 強化.
 
----
 
-좋습니다! 요청하신 내용을 깔끔한 **Markdown 형식**으로 정리해드리겠습니다. 일본어와 영어를 섞어, 일본 엔지니어들이 읽기 편하면서도 국제적으로 통용되는 README 스타일로 구성했습니다.  
-
----
 
 ```markdown
 # Defect Detection API
