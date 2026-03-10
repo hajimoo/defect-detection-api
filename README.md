@@ -171,7 +171,55 @@ defect-detection-api
 * **Backend:** Python, FastAPI, MySQL
 * **ML/DL:** TensorFlow, AutoKeras, NumPy, Pillow
 
+Defect Detection API
+Setup (セットアップ)
+Clone the repository (リポジトリをクローン)
 
+bash
+git clone https://github.com/hajimoo/defect-detection-api.git
+cd defect-detection-api
+Create virtual environment (仮想環境を作成)
+
+bash
+python -m venv .venv
+Activate environment (環境を有効化)
+
+Windows:
+
+bash
+.venv\Scripts\Activate.ps1
+Install dependencies (依存関係をインストール)
+
+bash
+pip install -r requirements.txt
+Start MySQL container (MySQLコンテナを起動)
+
+bash
+docker start mysql-container
+Initialize database (データベース初期化)
+
+bash
+docker exec -i mysql-container mysql -u root -p < app/db/init.sql
+Run the API server (APIサーバーを起動)
+
+bash
+uvicorn app.main:app --reload
+Open API documentation (APIドキュメントを開く)
+
+Code
+http://127.0.0.1:8000/docs
+
+
+Architecture Diagram (アーキテクチャ図)
+バージョン 1 — シンプルテキスト
+markdown
+React  
+↓  
+FastAPI  
+↓  
+CNN model  
+↓  
+MySQL
 
 
 
