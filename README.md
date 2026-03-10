@@ -199,9 +199,6 @@ defect-detection-api
 - MySQL
 - NumPy
 - Pillow
-```
-
-
 
 
 
