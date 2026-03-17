@@ -234,7 +234,7 @@ http://127.0.0.1:8000/docs
 ```
 ## Architecture Diagram (アーキテクチャ図)
 
-[React Frontend(UI/Ux)](https://github.com/hajimoo/defect-detection-frontend)
+[React Frontend(UI/Ux)](https://github.com/hajimoo/defect-detection-frontend) 
   ↓  
 [FastAPI Backend (API Repo)](https://github.com/hajimoo/defect-detection-api/tree/main)  
   ↓  
