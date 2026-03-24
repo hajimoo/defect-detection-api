@@ -95,19 +95,12 @@
 
 ---
 
-##  Prediction Logging
+## Prediction Logging
 
-推論結果は MySQL データベースに保存され、以下の分析が可能になります。
+Inference results are stored in MySQL for traceability and future analysis.
 
-| Column | Description |
-| --- | --- |
-| `id` | Primary key |
-| `image_name` | Uploaded image name |
-| `prediction` | Predicted label |
-| `confidence` | Model confidence |
-| `created_at` | Timestamp |
-
-* **活用例:** 誤検知分析、モデル改善、将来的なモニタリング。
+Detailed database schema and ERD are maintained in a separate repository:
+ai-defect-detection-db
 
 ---
 
