@@ -97,10 +97,9 @@
 
 ## Prediction Logging
 
-Inference results are stored in MySQL for traceability and future analysis.
+推論結果は、トレーサビリティと今後の分析のためにMySQLに保存されます。
 
-Detailed database schema and ERD are maintained in a separate repository:
-ai-defect-detection-db
+詳細なデータベーススキーマとER図は、別のリポジトリ（`ai-defect-detection-db`）で管理されています。
 
 ---
 
