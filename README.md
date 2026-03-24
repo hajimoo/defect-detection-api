@@ -116,7 +116,7 @@
 ```text
 defect-detection-api
 │
-  ── docs/
+│  ── docs/
 │   ├── system_design_ja.md  
 │   ├── system_design_ko.md   
 │   └── summary.md
