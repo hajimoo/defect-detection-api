@@ -164,10 +164,12 @@ defect-detection-api
 
 ---
 
-## Future Work
+##  System Design
 
-* **Model:** Data Augmentation, Class Weighting, Larger Dataset.
-* **System:** Docker コンテナ化, Model Version 管理, API Validation 強化.
+- 🇯🇵 Japanese Spec: docs/system_design_ja.pdf
+- 🇰🇷 Korean Spec: docs/system_design_ko.pdf
+
+This project focuses on recall-oriented defect detection under class imbalance.
 
 
 
