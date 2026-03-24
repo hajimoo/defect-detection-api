@@ -129,8 +129,8 @@ defect-detection-api
 │   │   ├── inference_service.py
 │   │   └── model_loader.py
 │   ├── db
-│   │   ├── database.py
-│   │   └── init.sql
+│   │   └── database.py
+│   │   
 │   ├── config.py
 │   ├── schemas.py
 │   └── main.py
