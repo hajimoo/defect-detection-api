@@ -212,10 +212,13 @@ source .venv/bin/activate
 pip install -r requirements.txt
 ```
 
-### 5. Start MySQL container (MySQLコンテナを起動)
-```bash
-docker start mysql-container
-```
+### 5. Database Setup
+
+本プロジェクトでは、MySQLデータベースを別のリポジトリで管理しています。
+
+https://github.com/hajimoo/ai-defect-detection-db
+
+APIを実行する前に、上記リポジトリの手順に従ってデータベースのセットアップを行ってください。
 
 ### 6. Initialize database (データベース初期化)
 ```bash
