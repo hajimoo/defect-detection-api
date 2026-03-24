@@ -250,7 +250,7 @@ http://127.0.0.1:8000/docs
 [CNN Model (GitHub Repo)](https://github.com/hajimoo/cnn-manufacturing-defect)  
 
   ↓  
-MySQL 
+[MySQL](https://github.com/hajimoo/ai-defect-detection-db)
 
 
 
