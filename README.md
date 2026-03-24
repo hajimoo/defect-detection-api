@@ -116,6 +116,11 @@
 ```text
 defect-detection-api
 │
+  ── docs/
+│   ├── system_design_ja.md  
+│   ├── system_design_ko.md   
+│   └── summary.md
+│
 ├── app
 │   ├── routers
 │   │   ├── health.py
