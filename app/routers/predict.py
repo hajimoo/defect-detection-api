@@ -53,3 +53,22 @@ async def predict(file: UploadFile = File(...)):
             INSERT INTO predictions (image_id, user_id, label, confidence, status)
             VALUES (%s, %s, %s, %s, %s)
             """,
+            (
+                image_id,
+                1,  # 추후 인증 구현 시 실제 user_id로 교체
+                result["prediction"],
+                result["confidence"],
+                "success"
+            )
+        )
+        conn.commit()
+
+    except Exception as e:
+        conn.rollback()
+        raise e
+
+    finally:
+        cursor.close()
+        conn.close()
+
+    return result
