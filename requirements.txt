@@ -5,4 +5,4 @@ python-dotenv
 tensorflow
 autokeras
 pillow
-
+python-multipart
