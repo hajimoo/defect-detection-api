@@ -190,8 +190,16 @@ cd defect-detection-api
 ```
 
 ### 2. Create virtual environment (仮想環境を作成)
+**Windows:**
+
 ```bash
-python -m venv .venv
+    py -3.11 -m venv .venv
+```
+
+**macOS/Linux:**
+
+```bash
+    python3.11 -m venv .venv
 ```
 
 ### 3. Activate environment (環境を有効化)
