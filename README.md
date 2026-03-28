@@ -222,7 +222,10 @@ APIを実行する前に、上記リポジトリの手順に従ってデータ�
 
 ### 6. Initialize database (データベース初期化)
 ```bash
-docker exec -i mysql-container mysql -u root -p < app/db/init.sql
+Windows (PowerShell):
+powershellGet-Content app\db\init.sql | docker exec -i mysql-container mysql -u root -p비밀번호
+macOS/Linux:
+bashdocker exec -i mysql-container mysql -u root -p비밀번호 < app/db/init.sql
 ```
 
 ### 7. Run API server (APIサーバーを起動)
