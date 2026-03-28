@@ -222,9 +222,9 @@ APIを実行する前に、上記リポジトリの手順に従ってデータ�
 
 ### 6. Initialize database (データベース初期化)
 
-**Windows:**
+**Windows(powershell):**
 ```bash
-powershellGet-Content app\db\init.sql | docker exec -i mysql-container mysql -u root -p비밀번호
+powershell Get-Content app\db\init.sql | docker exec -i mysql-container mysql -u root -p비밀번호
 ```
 **macOS/Linux:**
 ```bash
