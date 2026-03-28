@@ -228,24 +228,12 @@ https://github.com/hajimoo/ai-defect-detection-db
 
 APIを実行する前に、上記リポジトリの手順に従ってデータベースのセットアップを行ってください。
 
-### 6. Initialize database (データベース初期化)
-
-**Windows(powershell):**
-```bash
-cd ..
-powershell Get-Content app\db\init.sql | docker exec -i mysql-container mysql -u root -p password
-```
-**macOS/Linux:**
-```bash
-bashdocker exec -i mysql-container mysql -u root -p password < app/db/init.sql
-```
-
-### 7. Run API server (APIサーバーを起動)
+### 6. Run API server (APIサーバーを起動)
 ```bash
 uvicorn app.main:app --reload
 ```
 
-### 8. Open API documentation (APIドキュメントを開く)
+### 7. Open API documentation (APIドキュメントを開く)
 ```
 http://127.0.0.1:8000/docs
 ```
