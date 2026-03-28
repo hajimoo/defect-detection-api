@@ -230,6 +230,7 @@ APIを実行する前に、上記リポジトリの手順に従ってデータ�
 
 ### 6. Run API server (APIサーバーを起動)
 ```bash
+cd ..
 uvicorn app.main:app --reload
 ```
 
