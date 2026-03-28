@@ -232,6 +232,7 @@ APIを実行する前に、上記リポジトリの手順に従ってデータ�
 
 **Windows(powershell):**
 ```bash
+cd ..
 powershell Get-Content app\db\init.sql | docker exec -i mysql-container mysql -u root -p password
 ```
 **macOS/Linux:**
