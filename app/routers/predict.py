@@ -25,6 +25,7 @@ async def predict(file: UploadFile = File(...)):
     conn = get_connection()
     cursor = conn.cursor()
     try:
+        # TODO: JWT認証実装後にuser_idを実際のユーザーIDに置き換え、外部キー制約を有効化する
         cursor.execute("SET FOREIGN_KEY_CHECKS=0")
 
         cursor.execute(
