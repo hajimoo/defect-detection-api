@@ -1,3 +1,4 @@
+```markdown
 # CNN Defect Detection API
 
 本プロジェクトは、不均衡データにおいてAccuracyが誤解を招く問題に対し、Recallを優先することで解決することを目的としています。
@@ -81,7 +82,6 @@
   "prediction": "defect",
   "confidence": 0.91
 }
-
 ```
 
 ### Inference Pipeline
@@ -108,10 +108,9 @@
 ```text
 defect-detection-api
 │
-│  ── docs/
+├── docs/
 │   ├── system_design_ja.md  
 │   └── system_design_ko.md   
-│  
 │
 ├── app
 │   ├── routers
@@ -122,7 +121,6 @@ defect-detection-api
 │   │   └── model_loader.py
 │   ├── db
 │   │   └── database.py
-│   │   
 │   ├── config.py
 │   ├── schemas.py
 │   └── main.py
@@ -131,9 +129,13 @@ defect-detection-api
 │   └── notebook.ipynb
 │
 ├── models
+├── .dockerignore
+├── .env.example
+├── .gitignore
+├── docker-compose.yml
+├── Dockerfile
 ├── README.md
 └── requirements.txt
-
 ```
 
 ---
@@ -163,7 +165,7 @@ defect-detection-api
 
 This project focuses on recall-oriented defect detection under class imbalance.
 
-
+---
 
 ## Tech Stack (技術スタック)
 
@@ -178,31 +180,53 @@ This project focuses on recall-oriented defect detection under class imbalance.
 - NumPy
 - Pillow
 
+**Infrastructure**
+- Docker
+- Docker Compose
+
 ---
 
 ## Setup (セットアップ)
 
+### Docker を使ったセットアップ（推奨）
 
-### 1. Clone the repository
+#### 1. .env ファイルを作成
+```bash
+cp .env.example .env
+# .env を編集して各値を設定
+```
+
+#### 2. コンテナを起動
+```bash
+docker-compose up --build
+```
+
+#### 3. 確認
+- フロントエンド: http://localhost
+- API ドキュメント: http://localhost:8000/docs
+
+---
+
+### ローカル環境でのセットアップ
+
+#### 1. Clone the repository
 ```bash
 git clone https://github.com/hajimoo/defect-detection-api.git
 cd defect-detection-api
 ```
 
-### 2. Create virtual environment (仮想環境を作成)
+#### 2. Create virtual environment (仮想環境を作成)
 **Windows:**
-
 ```bash
-    py -3.11 -m venv .venv
+py -3.11 -m venv .venv
 ```
 
 **macOS/Linux:**
-
 ```bash
-    python3.11 -m venv .venv
+python3.11 -m venv .venv
 ```
 
-### 3. Activate environment (環境を有効化)
+#### 3. Activate environment (環境を有効化)
 **Windows:**
 ```bash
 .venv\Scripts\Activate.ps1
@@ -213,14 +237,12 @@ cd defect-detection-api
 source .venv/bin/activate
 ```
 
-
-
-### 4. Install dependencies (依存関係をインストール)
+#### 4. Install dependencies (依存関係をインストール)
 ```bash
 pip install -r requirements.txt
 ```
 
-### 5. Database Setup
+#### 5. Database Setup
 
 本プロジェクトでは、MySQLデータベースを別のリポジトリで管理しています。
 
@@ -228,16 +250,18 @@ https://github.com/hajimoo/ai-defect-detection-db
 
 APIを実行する前に、上記リポジトリの手順に従ってデータベースのセットアップを行ってください。
 
-### 6. Run API server (APIサーバーを起動)
+#### 6. Run API server (APIサーバーを起動)
 ```bash
-cd ..
 uvicorn app.main:app --reload
 ```
 
-### 7. Open API documentation (APIドキュメントを開く)
+#### 7. Open API documentation (APIドキュメントを開く)
 ```
-http://127.0.0.1:8000/docs
+http://localhost:8000/docs
 ```
+
+---
+
 ## Architecture Diagram (アーキテクチャ図)
 
 [React Frontend(UI)](https://github.com/hajimoo/defect-detection-frontend) 
@@ -250,6 +274,4 @@ http://127.0.0.1:8000/docs
 
   ↓  
 [MySQL](https://github.com/hajimoo/ai-defect-detection-db)
-
-
-
+```
