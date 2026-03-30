@@ -124,6 +124,12 @@ defect-detection-api
 │   ├── schemas.py
 │   └── main.py
 │
+├── ai-defect-detection-db/
+│   └── sql/
+│       ├── 01_schema.sql
+│       ├── 02_indexes.sql
+│       ├── 03_views.sql
+│       └── 04_sample_data.sql
 ├── notebook
 │   └── notebook.ipynb
 │
