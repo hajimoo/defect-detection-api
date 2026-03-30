@@ -1,4 +1,3 @@
-```markdown
 # CNN Defect Detection API
 
 本プロジェクトは、不均衡データにおいてAccuracyが誤解を招く問題に対し、Recallを優先することで解決することを目的としています。
