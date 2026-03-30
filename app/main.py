@@ -5,7 +5,7 @@ from app.routers import health, predict
 
 app = FastAPI(title="CNN Defect Detection API")
 
-origins = os.getenv("ALLOWED_ORIGINS", "http://localhost:5173").split(",")
+origins = os.getenv("ALLOWED_ORIGINS", "http://localhost,http://localhost:80").split(",")
 
 app.add_middleware(
     CORSMiddleware,
