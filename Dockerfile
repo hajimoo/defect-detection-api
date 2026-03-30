@@ -21,15 +21,4 @@ EXPOSE 8000
 CMD ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "8000"]
 ```
 
-그리고 `.dockerignore` 파일도 같이 만들어야 해. 없으면 `notebook/`, `.env` 같은 불필요한 파일까지 이미지에 들어가:
-```
-.env
-.env.*
-.gitignore
-notebook/
-docs/
-__pycache__/
-*.pyc
-*.pyo
-.pytest_cache/
-README.md
+
