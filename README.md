@@ -273,4 +273,4 @@ http://localhost:8000/docs
 
   ↓  
 [MySQL](https://github.com/hajimoo/ai-defect-detection-db)
-```
+
