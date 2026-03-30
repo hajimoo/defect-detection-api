@@ -8,3 +8,7 @@ __pycache__/
 *.pyo
 .pytest_cache/
 README.md
+.venv/
+uploads/
+ai-defect-detection-db/
+*.ipynb
