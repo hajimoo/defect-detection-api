@@ -1,6 +1,6 @@
 USE ai_defect_detection;
 
-INSERT INTO users (email, password_hash, role, is_active)
+INSERT INTO users (username, hashed_password, role, is_active)
 VALUES
 ('user1@test.com', 'hashed_pw_1', 'user', 1),
 ('admin@test.com', 'hashed_pw_admin', 'admin', 1);
