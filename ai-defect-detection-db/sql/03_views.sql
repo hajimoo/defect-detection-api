@@ -11,7 +11,7 @@ SELECT
     p.failure_reason,
     p.similar_case_group,
     p.created_at AS prediction_created_at,
-    u.email AS user_email,
+    u.username AS username
     ui.original_filename,
     ui.stored_path,
     rq.review_status,
