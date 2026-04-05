@@ -9,7 +9,10 @@ from passlib.context import CryptContext
 
 # JWT署名に使う秘密鍵
 # 実務ではコードに直接書かず、環境変数で管理するのが望ましい
-SECRET_KEY = "your-secret-key-change-this"
+import os
+SECRET_KEY = os.getenv("SECRET_KEY")
+if not SECRET_KEY:
+    raise RuntimeError("SECRET_KEY 環境変数が設定されていません。")
 
 # JWT署名アルゴリズム
 ALGORITHM = "HS256"
