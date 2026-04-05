@@ -72,6 +72,8 @@
 | Endpoint | Method | Description |
 | :--- | :--- | :--- |
 | `/health` | `GET` | API health check |
+| `/auth/register` | `POST` | ユーザー登録 |
+| `/auth/token` | `POST` | ログイン / JWT トークン発行 |
 | `/predict` | `POST` | 画像アップロードによる欠陥予測 |
 
 **Response Example:**
@@ -112,7 +114,10 @@ defect-detection-api
 │   └── system_design_ko.md   
 │
 ├── app
+│   ├── auth
+│   │   └── security.py
 │   ├── routers
+│   │   ├── auth.py
 │   │   ├── health.py
 │   │   └── predict.py
 │   ├── services
