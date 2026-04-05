@@ -13,7 +13,7 @@ CREATE TABLE users (
     created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
     updated_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     PRIMARY KEY (id),
-    UNIQUE KEY uk_users_email (email)
+    UNIQUE KEY uk_users_username (username)
 ) ENGINE=InnoDB;
 
 CREATE TABLE uploaded_images (
