@@ -81,6 +81,8 @@ async def predict(
 
     except Exception as e:
         conn.rollback()
+        if os.path.exists(stored_path):
+            os.remove(stored_path)
         raise e
 
     finally:
