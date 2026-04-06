@@ -78,8 +78,13 @@ async def predict(
         }
         ext = content_type_to_ext.get(file.content_type.lower(), ".jpg")
 
+    user_id = current_user["id"]
+
+    user_upload_dir = os.path.join(UPLOAD_DIR, str(user_id))
+    os.makedirs(user_upload_dir, exist_ok=True)
+
     stored_filename = f"{uuid.uuid4().hex}{ext}"
-    stored_path = os.path.join(UPLOAD_DIR, stored_filename)
+    stored_path = os.path.join(user_upload_dir, stored_filename)
 
     # 5) ファイルを保存
     try:
@@ -110,8 +115,6 @@ async def predict(
     cursor = conn.cursor()
 
     try:
-        user_id = current_user["id"]
-
         # アップロード画像情報を保存
         cursor.execute(
             """
