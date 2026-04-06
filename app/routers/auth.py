@@ -305,7 +305,7 @@ async def logout(
 
     処理の流れ:
     1. refresh token を検証
-    2. Redis から 해당 refresh token を削除
+    2. Redis から対象の refresh token を削除
     """
     payload = decode_token(body.refresh_token)
 
@@ -444,7 +444,7 @@ async def delete_user(
     try:
         cursor.execute(
             """
-            SELECT id, username, hashed_password, is_deleted
+            SELECT id, username, hashed_password, is_deleted, token_version
             FROM users
             WHERE id = %s
             """,
