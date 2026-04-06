@@ -1,4 +1,21 @@
 from pydantic import BaseModel, Field
+from typing import List, Optional
+
+
+class UploadHistoryItem(BaseModel):
+    image_id: int
+    original_filename: str
+    stored_path: str
+    mime_type: str
+    file_size: int
+    uploaded_at: Optional[str] = None
+    prediction: str
+    confidence: float
+    status: str
+    predicted_at: Optional[str] = None
+
+class UploadHistoryResponse(BaseModel):
+    items: List[UploadHistoryItem]
 
 
 # =========================
