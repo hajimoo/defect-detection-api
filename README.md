@@ -73,8 +73,21 @@
 | :--- | :--- | :--- |
 | `/health` | `GET` | API health check |
 | `/auth/register` | `POST` | ユーザー登録 |
-| `/auth/token` | `POST` | ログイン / JWT トークン発行 |
+| `/auth/token` | `POST` | ログイン / access token + refresh token 発行 |
+| `/auth/refresh` | `POST` | refresh token によるトークン再発行 |
+| `/auth/logout` | `POST` | ログアウト / refresh token 無効化 |
+| `/auth/password` | `PATCH` | パスワード変更 |
+| `/auth/me` | `DELETE` | 会員退会 |
 | `/predict` | `POST` | 画像アップロードによる欠陥予測 |
+
+**Auth Response Example (`/auth/token`):**
+```json
+{
+  "access_token": "eyJ...",
+  "refresh_token": "eyJ...",
+  "token_type": "bearer"
+}
+```
 
 **Response Example:**
 ```json
@@ -183,6 +196,7 @@ This project focuses on recall-oriented defect detection under class imbalance.
 - Python
 - FastAPI
 - MySQL
+- Redis
 
 **ML / DL**
 - TensorFlow
@@ -284,4 +298,26 @@ http://localhost:8000/docs
 
   ↓  
 [MySQL](https://github.com/hajimoo/ai-defect-detection-db)
+
+---
+
+## Authentication & Session Management
+
+本プロジェクトでは JWT ベースの認証に加えて、Redis を用いた refresh token 管理を導入しています。
+
+### Authentication Flow
+1. `/auth/register` でユーザー登録
+2. `/auth/token` で access token / refresh token 発行
+3. access token を使って保護された API にアクセス
+4. access token 期限切れ時は `/auth/refresh` で再発行
+5. `/auth/logout` で refresh token を無効化
+6. パスワード変更 / 退会時には Redis 上の refresh token を全削除
+
+### Security Features
+- Password hashing with bcrypt
+- JWT access token
+- JWT refresh token
+- Redis-based refresh token storage
+- token_version による旧トークン無効化
+- soft delete による退会処理
 
