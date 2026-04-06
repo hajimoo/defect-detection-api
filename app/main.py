@@ -1,9 +1,33 @@
 import os
+from contextlib import asynccontextmanager
+
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
+from redis import Redis
+
 from app.routers import health, predict, auth
 
-app = FastAPI(title="CNN Defect Detection API")
+
+@asynccontextmanager
+async def lifespan(app: FastAPI):
+    """
+    アプリ起動時に Redis 接続を作成し、
+    終了時に接続を閉じる
+    """
+    app.state.redis = Redis(
+        host=os.getenv("REDIS_HOST", "localhost"),
+        port=int(os.getenv("REDIS_PORT", "6379")),
+        db=int(os.getenv("REDIS_DB", "0")),
+        decode_responses=True
+    )
+    yield
+    app.state.redis.close()
+
+
+app = FastAPI(
+    title="CNN Defect Detection API",
+    lifespan=lifespan
+)
 
 origins = os.getenv(
     "ALLOWED_ORIGINS",
