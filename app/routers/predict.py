@@ -8,7 +8,7 @@ from fastapi import APIRouter, UploadFile, File, Depends, HTTPException, status
 
 from app.services.inference_service import run_inference
 from app.db.database import get_connection
-from app.schemas import PredictionResponse
+from app.schemas import PredictionResponse, UploadHistoryResponse
 from app.auth.security import get_current_user
 
 router = APIRouter()
@@ -167,3 +167,51 @@ async def predict(
         conn.close()
 
     return result
+
+
+@router.get("/uploads/history", response_model=UploadHistoryResponse)
+async def get_upload_history(
+    current_user: dict = Depends(get_current_user)
+):
+    """
+    ユーザー別アップロード履歴 조회API
+    - ログイン済みユーザーのみ利用可能
+    - 自分がアップロードした画像と推論結果のみ返す
+    """
+    conn = get_connection()
+    cursor = conn.cursor(dictionary=True)
+
+    try:
+        cursor.execute(
+            """
+            SELECT
+                ui.id AS image_id,
+                ui.original_filename,
+                ui.stored_path,
+                ui.mime_type,
+                ui.file_size,
+                ui.created_at AS uploaded_at,
+                p.label AS prediction,
+                p.confidence,
+                p.status,
+                p.created_at AS predicted_at
+            FROM uploaded_images ui
+            JOIN predictions p ON ui.id = p.image_id
+            WHERE ui.user_id = %s
+            ORDER BY ui.id DESC
+            """,
+            (current_user["id"],)
+        )
+
+        rows = cursor.fetchall()
+        return {"items": rows}
+
+    except Exception:
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail="アップロード履歴の取得中にエラーが発生しました。"
+        )
+
+    finally:
+        cursor.close()
+        conn.close()
