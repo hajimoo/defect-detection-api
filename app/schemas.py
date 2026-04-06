@@ -26,15 +26,27 @@ class TokenResponse(BaseModel):
     JWTトークンレスポンス
     """
     access_token: str
+    refresh_token: str
     token_type: str
+
+
+class RefreshTokenRequest(BaseModel):
+    """
+    リフレッシュトークンリクエスト
+    """
+    refresh_token: str
+
+
+class LogoutRequest(BaseModel):
+    """
+    ログアウトリクエスト
+    """
+    refresh_token: str
 
 
 class ChangePasswordRequest(BaseModel):
     """
     パスワード変更リクエスト
-
-    - current_password: 現在のパスワード
-    - new_password: 新しいパスワード
     """
     current_password: str = Field(..., min_length=8, max_length=128)
     new_password: str = Field(..., min_length=8, max_length=128)
@@ -43,7 +55,5 @@ class ChangePasswordRequest(BaseModel):
 class DeleteUserRequest(BaseModel):
     """
     会員退会リクエスト
-
-    - password: 本人確認のための現在のパスワード
     """
     password: str = Field(..., min_length=8, max_length=128)
