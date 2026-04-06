@@ -59,3 +59,6 @@ CREATE INDEX idx_review_queue_status_created
 
 CREATE INDEX idx_dataset_candidates_status_created
     ON dataset_candidates(candidate_status, created_at);
+
+CREATE INDEX idx_users_is_deleted
+    ON users(is_deleted);
