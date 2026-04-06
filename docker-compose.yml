@@ -8,15 +8,17 @@ services:
       - mysql_data:/var/lib/mysql
       - ./ai-defect-detection-db/sql:/docker-entrypoint-initdb.d
     healthcheck:
-      test: ["CMD-SHELL", "mysqladmin ping -h localhost -uroot -p$MYSQL_ROOT_PASSWORD || exit 1"]
+      test: ["CMD-SHELL", "mysqladmin ping -h localhost -uroot -p$$MYSQL_ROOT_PASSWORD || exit 1"]
       interval: 10s
       timeout: 5s
       retries: 5
+
   redis:
     image: redis:latest
     ports:
       - "6379:6379"
     restart: always
+
   api:
     build: .
     ports:
@@ -27,6 +29,8 @@ services:
     depends_on:
       db:
         condition: service_healthy
+      redis:
+        condition: service_started
 
   frontend:
     build: ../defect-detection-frontend
