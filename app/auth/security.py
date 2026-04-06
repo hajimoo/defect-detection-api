@@ -1,11 +1,12 @@
 from datetime import datetime, timedelta, timezone
 from typing import Annotated
+from uuid import uuid4
+import os
 
 from fastapi import Depends, HTTPException, status
 from fastapi.security import OAuth2PasswordBearer
 from jose import JWTError, jwt
 from passlib.context import CryptContext
-import os
 
 from app.db.database import get_connection
 
@@ -47,9 +48,6 @@ oauth2_bearer = OAuth2PasswordBearer(tokenUrl="/auth/token")
 def hash_password(password: str) -> str:
     """
     パスワードをハッシュ化する関数
-
-    平文のままDBに保存すると危険なため、
-    必ずハッシュ化して保存する。
     """
     return bcrypt_context.hash(password)
 
@@ -63,8 +61,38 @@ def verify_password(plain_password: str, hashed_password: str) -> bool:
 
 
 # =========================
-# JWT生成関数
+# JWT生成共通関数
 # =========================
+
+def create_token(
+    username: str,
+    user_id: int,
+    token_version: int,
+    expires_delta: timedelta,
+    token_type: str,
+) -> str:
+    """
+    JWTを生成する共通関数
+
+    payload には以下の情報を含める:
+    - sub: username
+    - id: user_id
+    - token_version: トークンのバージョン
+    - jti: トークン固有ID
+    - type: access または refresh
+    - exp: 有効期限
+    """
+    encode = {
+        "sub": username,
+        "id": user_id,
+        "token_version": token_version,
+        "jti": str(uuid4()),
+        "type": token_type,
+        "exp": datetime.now(timezone.utc) + expires_delta,
+    }
+
+    return jwt.encode(encode, SECRET_KEY, algorithm=ALGORITHM)
+
 
 def create_access_token(
     username: str,
@@ -73,22 +101,51 @@ def create_access_token(
     expires_delta: timedelta
 ) -> str:
     """
-    JWTアクセストークンを生成する関数
-
-    payload には以下の情報を含める:
-    - sub: username
-    - id: user_id
-    - token_version: トークンのバージョン
-    - exp: 有効期限
+    アクセストークンを生成する関数
     """
-    encode = {
-        "sub": username,
-        "id": user_id,
-        "token_version": token_version,
-        "exp": datetime.now(timezone.utc) + expires_delta
-    }
+    return create_token(
+        username=username,
+        user_id=user_id,
+        token_version=token_version,
+        expires_delta=expires_delta,
+        token_type="access",
+    )
 
-    return jwt.encode(encode, SECRET_KEY, algorithm=ALGORITHM)
+
+def create_refresh_token(
+    username: str,
+    user_id: int,
+    token_version: int,
+    expires_delta: timedelta
+) -> str:
+    """
+    リフレッシュトークンを生成する関数
+    """
+    return create_token(
+        username=username,
+        user_id=user_id,
+        token_version=token_version,
+        expires_delta=expires_delta,
+        token_type="refresh",
+    )
+
+
+# =========================
+# JWT解析関数
+# =========================
+
+def decode_token(token: str) -> dict:
+    """
+    JWTをデコードして payload を返す関数
+    """
+    try:
+        payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
+        return payload
+    except JWTError:
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="Could not validate user."
+        )
 
 
 # =========================
@@ -102,28 +159,37 @@ async def get_current_user(token: Annotated[str, Depends(oauth2_bearer)]):
 
     処理の流れ:
     1. JWTをデコードする
-    2. payload から user 情報を取得する
-    3. DBから現在のユーザー状態を再確認する
-    4. 退会済みかどうかを確認する
-    5. token_version が一致するか確認する
+    2. access token かどうかを確認する
+    3. payload から user 情報を取得する
+    4. DBから現在のユーザー状態を再確認する
+    5. 退会済みかどうかを確認する
+    6. token_version が一致するか確認する
     """
     credentials_exception = HTTPException(
         status_code=status.HTTP_401_UNAUTHORIZED,
         detail="Could not validate user."
     )
 
-    try:
-        payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
+    payload = decode_token(token)
 
-        username = payload.get("sub")
-        user_id = payload.get("id")
-        token_version = payload.get("token_version")
+    username = payload.get("sub")
+    user_id = payload.get("id")
+    token_version = payload.get("token_version")
+    token_type = payload.get("type")
+    jti = payload.get("jti")
 
-        # payload に必要な値がない場合は認証失敗
-        if username is None or user_id is None or token_version is None:
-            raise credentials_exception
+    # payload に必要な値がない場合は認証失敗
+    if (
+        username is None
+        or user_id is None
+        or token_version is None
+        or token_type is None
+        or jti is None
+    ):
+        raise credentials_exception
 
-    except JWTError:
+    # access token 以外は通常認証で使用不可
+    if token_type != "access":
         raise credentials_exception
 
     conn = get_connection()
@@ -152,15 +218,15 @@ async def get_current_user(token: Annotated[str, Depends(oauth2_bearer)]):
                 detail="This account has been deleted."
             )
 
-        # token_version が一致しない場合、
-        # 古いトークンとみなして認証を拒否する
+        # token_version が一致しない場合は古いトークンとみなす
         if user["token_version"] != token_version:
             raise credentials_exception
 
         return {
             "id": user["id"],
             "username": user["username"],
-            "token_version": user["token_version"]
+            "token_version": user["token_version"],
+            "jti": jti,
         }
 
     finally:
