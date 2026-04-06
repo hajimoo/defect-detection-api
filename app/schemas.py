@@ -1,6 +1,6 @@
 from pydantic import BaseModel, Field
 from typing import List, Optional
-
+from datetime import datetime
 
 class UploadHistoryItem(BaseModel):
     image_id: int
@@ -8,11 +8,11 @@ class UploadHistoryItem(BaseModel):
     stored_path: str
     mime_type: str
     file_size: int
-    uploaded_at: Optional[str] = None
+    uploaded_at: Optional[datetime] = None
     prediction: str
     confidence: float
     status: str
-    predicted_at: Optional[str] = None
+    predicted_at: Optional[datetime] = None
 
 class UploadHistoryResponse(BaseModel):
     items: List[UploadHistoryItem]
