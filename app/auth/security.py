@@ -16,7 +16,6 @@ from app.db.database import get_connection
 # =========================
 
 # JWT署名に使う秘密鍵
-# 実務ではコードに直接書かず、環境変数で管理する
 SECRET_KEY = os.getenv("SECRET_KEY")
 if not SECRET_KEY:
     raise RuntimeError("SECRET_KEY 環境変数が設定されていません。")
