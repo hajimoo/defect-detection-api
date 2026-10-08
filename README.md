@@ -1,40 +1,40 @@
 # CNN Defect Detection API
 
-本プロジェクトは、不均衡データにおいてAccuracyが誤解を招く問題に対し、Recallを優先することで解決することを目的としています。
+본 프로젝트는 불균형 데이터에서 Accuracy가 오해를 불러일으키는 문제를 Recall 우선 전략으로 해결하는 것을 목적으로 합니다.
 
-製造業における欠陥検出モデルを **REST API として提供する推論バックエンドのプロトタイプ**です。
+제조업의 결함 검출 모델을 **REST API로 제공하는 추론 백엔드 프로토타입**입니다.
 
 ---
 
 ##  Problem
-初期の CNN モデルはテストデータに対して **高い Accuracy** を示しました。  
-しかし **Confusion Matrix** を確認したところ、欠陥サンプルを正常と誤判定するケースが存在していました。
+초기 CNN 모델은 테스트 데이터에서 **높은 Accuracy**를 보였습니다.  
+그러나 **Confusion Matrix**를 확인한 결과, 결함 샘플을 정상으로 잘못 판정하는 경우가 존재했습니다.
 
-製造業の検査システムでは **「欠陥を見逃す (False Negative)」** ことが重大なリスクになります。
-このため、以下の問題が明らかになりました。
+제조업 검사 시스템에서는 **"결함을 놓치는 것 (False Negative)"** 이 중대한 리스크가 됩니다.
+이에 따라 다음과 같은 문제가 드러났습니다.
 
-* Accuracy が高くても信頼できない可能性
-* クラス不均衡による評価の歪み
+* Accuracy가 높아도 신뢰할 수 없을 가능성
+* 클래스 불균형으로 인한 평가 왜곡
 
 ---
 
 ##  Investigation
-データセットを分析した結果、以下のような **深刻なクラス不均衡** が存在していました。
+데이터셋을 분석한 결과, 다음과 같은 **심각한 클래스 불균형**이 존재했습니다.
 
 | Split | Normal | Defect |
 | :--- | :--- | :--- |
 | **Train** | 1102 | 59 |
 | **Test** | 276 | 15 |
 
-このようなデータでは、モデルが常に **Normal と予測するだけでも高い Accuracy** を達成できてしまいます。そのため **Accuracy だけではモデルの信頼性を評価できない** と判断しました。
+이러한 데이터에서는 모델이 항상 **Normal로 예측하기만 해도 높은 Accuracy**를 달성할 수 있습니다. 따라서 **Accuracy만으로는 모델의 신뢰성을 평가할 수 없다**고 판단했습니다.
 
 ---
 
 ## Approach
-評価戦略を **「Accuracy 中心 → Recall 重視」** へ変更しました。  
-理由は、製造業の検査システムでは **欠陥の見逃しを最小化することが最も重要** だからです。
+평가 전략을 **"Accuracy 중심 → Recall 중시"** 로 변경했습니다.  
+제조업 검사 시스템에서는 **결함의 누락을 최소화하는 것이 가장 중요**하기 때문입니다.
 
-**使用した評価指標:**
+**사용한 평가 지표:**
 * Accuracy / Precision / **Recall (Primary Metric)** / F1 Score
 * Confusion Matrix
 * ROC Curve
@@ -42,13 +42,13 @@
 ---
 
 ## Model Development
-モデル開発および評価は **Jupyter Notebook 環境** で実施しました。
+모델 개발 및 평가는 **Jupyter Notebook 환경**에서 수행했습니다.
 
-**使用技術:**
+**사용 기술:**
 * TensorFlow / AutoKeras ImageClassifier
 
 ### Preprocessing
-* RGB 変換 / 256×256 リサイズ / ピクセル値の正規化 `[0, 1]`
+* RGB 변환 / 256×256 리사이즈 / 픽셀값 정규화 `[0, 1]`
 
 ### Label
 | Label | Meaning |
@@ -66,19 +66,19 @@
 ---
 
 ## From Experiment to System
-ノートブック環境での課題（外部システム統合、ログ管理、モニタリング）を解決するため、本プロジェクトでは CNN モデルを **FastAPI を用いた推論 API** として実装しました。
+노트북 환경의 과제(외부 시스템 통합, 로그 관리, 모니터링)를 해결하기 위해, 본 프로젝트에서는 CNN 모델을 **FastAPI를 이용한 추론 API**로 구현했습니다.
 
 ### API Design (Endpoints)
 | Endpoint | Method | Description |
 | :--- | :--- | :--- |
 | `/health` | `GET` | API health check |
-| `/auth/register` | `POST` | ユーザー登録 |
-| `/auth/token` | `POST` | ログイン / access token + refresh token 発行 |
-| `/auth/refresh` | `POST` | refresh token によるトークン再発行 |
-| `/auth/logout` | `POST` | ログアウト / refresh token 無効化 |
-| `/auth/password` | `PATCH` | パスワード変更 |
-| `/auth/me` | `DELETE` | 会員退会 |
-| `/predict` | `POST` | 画像アップロードによる欠陥予測 |
+| `/auth/register` | `POST` | 사용자 등록 |
+| `/auth/token` | `POST` | 로그인 / access token + refresh token 발급 |
+| `/auth/refresh` | `POST` | refresh token을 통한 토큰 재발급 |
+| `/auth/logout` | `POST` | 로그아웃 / refresh token 무효화 |
+| `/auth/password` | `PATCH` | 비밀번호 변경 |
+| `/auth/me` | `DELETE` | 회원 탈퇴 |
+| `/predict` | `POST` | 이미지 업로드를 통한 결함 예측 |
 
 **Auth Response Example (`/auth/token`):**
 ```json
@@ -111,9 +111,9 @@
 
 ## Prediction Logging
 
-推論結果は、トレーサビリティと今後の分析のためにMySQLに保存されます。
+추론 결과는 추적성(트레이서빌리티)과 향후 분석을 위해 MySQL에 저장됩니다.
 
-詳細なデータベーススキーマとER図は、別のリポジトリ（`ai-defect-detection-db`）で管理されています。
+상세한 데이터베이스 스키마와 ER 다이어그램은 별도의 저장소(`ai-defect-detection-db`)에서 관리됩니다.
 
 ---
 
@@ -165,19 +165,19 @@ defect-detection-api
 
 ##  Dataset
 
-本プロジェクトで使用したデータセットは以下のリンクから取得できます。
+본 프로젝트에서 사용한 데이터셋은 아래 링크에서 받을 수 있습니다.
 
 > [Dataset Download (Google Drive)](https://drive.google.com/drive/folders/1_mUbemlmzwXYeZPI5Bj3cG7FG53OFrxj)
 
-*注意: 本モデルはこのデータセットを前提として学習されています。異なるドメインの画像では予測精度が低下する可能性があります。*
+*주의: 본 모델은 이 데이터셋을 전제로 학습되었습니다. 다른 도메인의 이미지에서는 예측 정확도가 떨어질 수 있습니다.*
 
 ---
 
 ##  Current Limitations
 
-* データセットサイズが小さい / クラス不均衡が大きい。
-* Train/Test サンプルの類似性により、性能が楽観的に見えている可能性。
-* **必要な検証:** Cross Validation、外部データセット評価、Threshold calibration。
+* 데이터셋 크기가 작음 / 클래스 불균형이 큼.
+* Train/Test 샘플 간의 유사성으로 인해 성능이 낙관적으로 보일 가능성.
+* **필요한 검증:** Cross Validation, 외부 데이터셋 평가, Threshold calibration.
 
 ---
 
@@ -190,7 +190,7 @@ This project focuses on recall-oriented defect detection under class imbalance.
 
 ---
 
-## Tech Stack (技術スタック)
+## Tech Stack (기술 스택)
 
 **Backend**
 - Python
@@ -210,28 +210,28 @@ This project focuses on recall-oriented defect detection under class imbalance.
 
 ---
 
-## Setup (セットアップ)
+## Setup (설정)
 
-### Docker を使ったセットアップ（推奨）
+### Docker를 이용한 설정 (권장)
 
-#### 1. .env ファイルを作成
+#### 1. .env 파일 생성
 ```bash
 cp .env.example .env
-# .env を編集して各値を設定
+# .env를 편집하여 각 값을 설정
 ```
 
-#### 2. コンテナを起動
+#### 2. 컨테이너 실행
 ```bash
 docker-compose up --build
 ```
 
-#### 3. 確認
-- フロントエンド: http://localhost
-- API ドキュメント: http://localhost:8000/docs
+#### 3. 확인
+- 프론트엔드: http://localhost
+- API 문서: http://localhost:8000/docs
 
 ---
 
-### ローカル環境でのセットアップ
+### 로컬 환경에서의 설정
 
 #### 1. Clone the repository
 ```bash
@@ -239,7 +239,7 @@ git clone https://github.com/hajimoo/defect-detection-api.git
 cd defect-detection-api
 ```
 
-#### 2. Create virtual environment (仮想環境を作成)
+#### 2. Create virtual environment (가상 환경 생성)
 **Windows:**
 ```bash
 py -3.11 -m venv .venv
@@ -250,7 +250,7 @@ py -3.11 -m venv .venv
 python3.11 -m venv .venv
 ```
 
-#### 3. Activate environment (環境を有効化)
+#### 3. Activate environment (환경 활성화)
 **Windows:**
 ```bash
 .venv\Scripts\Activate.ps1
@@ -261,32 +261,32 @@ python3.11 -m venv .venv
 source .venv/bin/activate
 ```
 
-#### 4. Install dependencies (依存関係をインストール)
+#### 4. Install dependencies (의존성 설치)
 ```bash
 pip install -r requirements.txt
 ```
 
 #### 5. Database Setup
 
-本プロジェクトでは、MySQLデータベースを別のリポジトリで管理しています。
+본 프로젝트에서는 MySQL 데이터베이스를 별도의 저장소에서 관리하고 있습니다.
 
 https://github.com/hajimoo/ai-defect-detection-db
 
-APIを実行する前に、上記リポジトリの手順に従ってデータベースのセットアップを行ってください。
+API를 실행하기 전에, 위 저장소의 절차에 따라 데이터베이스를 설정해 주세요.
 
-#### 6. Run API server (APIサーバーを起動)
+#### 6. Run API server (API 서버 실행)
 ```bash
 uvicorn app.main:app --reload
 ```
 
-#### 7. Open API documentation (APIドキュメントを開く)
+#### 7. Open API documentation (API 문서 열기)
 ```
 http://localhost:8000/docs
 ```
 
 ---
 
-## Architecture Diagram (アーキテクチャ図)
+## Architecture Diagram (아키텍처 다이어그램)
 
 [React Frontend(UI)](https://github.com/hajimoo/defect-detection-frontend) 
 
@@ -303,21 +303,21 @@ http://localhost:8000/docs
 
 ## Authentication & Session Management
 
-本プロジェクトでは JWT ベースの認証に加えて、Redis を用いた refresh token 管理を導入しています。
+본 프로젝트에서는 JWT 기반 인증에 더해, Redis를 이용한 refresh token 관리를 도입했습니다.
 
 ### Authentication Flow
-1. `/auth/register` でユーザー登録
-2. `/auth/token` で access token / refresh token 発行
-3. access token を使って保護された API にアクセス
-4. access token 期限切れ時は `/auth/refresh` で再発行
-5. `/auth/logout` で refresh token を無効化
-6. パスワード変更 / 退会時には Redis 上の refresh token を全削除
+1. `/auth/register`로 사용자 등록
+2. `/auth/token`으로 access token / refresh token 발급
+3. access token을 사용해 보호된 API에 접근
+4. access token 만료 시 `/auth/refresh`로 재발급
+5. `/auth/logout`으로 refresh token 무효화
+6. 비밀번호 변경 / 탈퇴 시 Redis 상의 refresh token 전체 삭제
 
 ### Security Features
 - Password hashing with bcrypt
 - JWT access token
 - JWT refresh token
 - Redis-based refresh token storage
-- token_version による旧トークン無効化
-- soft delete による退会処理
+- token_version을 통한 기존 토큰 무효화
+- soft delete를 통한 탈퇴 처리
 
